@@ -8,3 +8,9 @@ run the server
 
 Figure out what yarn.lock and the other lock file are for 
 
+
+
+reference this:
+
+https://github.com/dittonjs/CS4610Spring2023/tree/main/dbAndUserAuth
+
