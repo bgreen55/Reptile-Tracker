@@ -1,31 +1,64 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
+import express, { RequestHandler } from "express";
+import { PrismaClient, User } from "@prisma/client";
+import bcrypt from 'bcrypt';
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import { JWTBody, RequestWithJWTBody } from "./dto/jwt";
+import { usersController } from "./controllers/users_controller";
 
+dotenv.config();
 const client = new PrismaClient();
 const app = express();
-app.use(express.json());
 
-app.post('/users', async (req, res) => {
-  const user = await client.user.create({
-    data: {
-      firstName: "Joseph",
-      lastName: "Ditton",
-      email: "joseph.ditton@usu.edu",
-      passwordHash: "q23oejklnvzlskjfdnf"
+app.use(express.json());
+app.use(cookieParser());
+
+//sign up
+
+type LoginBody = {
+  email: string,
+  password: string
+}
+
+// log in
+app.post("/sessions",  async (req, res) => {
+  const {email, password} = req.body as LoginBody;
+  const user = await client.user.findFirst({
+    where: {
+      email,
     }
   });
-  res.json({ user });
+  if (!user) {
+    res.status(404).json({ message: "Invalid email or password" });
+    return;
+  }
+
+  const isValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isValid) {
+    res.status(404).json({ message: "Invalid email or password" });
+    return;
+  }
+
+  const token = jwt.sign({
+    userId: user.id
+  }, process.env.ENCRYPTION_KEY!!, {
+    expiresIn: '10m'
+  });
+  res.json({
+    user,
+    token
+  })
 });
 
-app.get("/users", async (req, res) => {
-  const users = await client.user.findMany();
-  res.json({ users });
-})
+usersController(app, client);
 
 app.get("/", (req, res) => {
   res.send(`<h1>Hello, world!</h1>`);
 });
 
-app.listen(3000, () => {
-  console.log("I got started!");
+app.listen(parseInt(process.env.PORT || "3000", 10), () => {
+  console.log(`App running on port ${process.env.PORT}`);
 });
+
+export default app;
