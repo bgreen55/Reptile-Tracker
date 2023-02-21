@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { JWTBody, RequestWithJWTBody } from "./dto/jwt";
 import { usersController } from "./controllers/users_controller";
+import { reptilesController } from "./controllers/reptiles_controller";
 
 dotenv.config();
 const client = new PrismaClient();
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+reptilesController(app, client);
 usersController(app, client);
 
 //this is middleware for index page

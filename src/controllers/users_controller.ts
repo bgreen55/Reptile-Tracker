@@ -33,7 +33,7 @@ const getLogin = (client: PrismaClient): RequestHandler =>
     const token = jwt.sign({
       userId: user.id
     }, process.env.ENCRYPTION_KEY!!, {
-      expiresIn: '10m'
+      expiresIn: '1000m'
     });
     res.json({
       user,
@@ -50,8 +50,6 @@ type CreateUserBody = {
 
 const createUser = (client: PrismaClient): RequestHandler =>
   async (req, res) => {
-    console.log("Yo");
-    console.log(req.body);
     const {firstName, lastName, email, password} = req.body as CreateUserBody;
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await client.user.create({
@@ -66,7 +64,7 @@ const createUser = (client: PrismaClient): RequestHandler =>
     const token = jwt.sign({
       userId: user.id
     }, process.env.ENCRYPTION_KEY!!, {
-      expiresIn: '10m'
+      expiresIn: '1000m'
     });
 
     res.json({ user, token });
@@ -77,6 +75,6 @@ export const usersController = controller(
   "users",
   [
     { path: "/login", endpointBuilder: getLogin, method: "get" },
-    { path: "/", method: "post", endpointBuilder: createUser, skipAuth: true }
+    { path: "/create", method: "post", endpointBuilder: createUser, skipAuth: true }
   ]
 )
