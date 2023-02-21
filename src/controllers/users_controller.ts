@@ -5,23 +5,41 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { controller } from "../lib/controller";
 
-const getMe = (client: PrismaClient): RequestHandler =>
-  async (req: RequestWithJWTBody, res) => {
-    const userId = req.jwtBody?.userId;
-    if (!userId) {
-      res.status(401).json({ message: "Unauthorized" });
+type LoginBody = {
+  email: string,
+  password: string
+}
+  
+// log in
+const getLogin = (client: PrismaClient): RequestHandler =>
+  async (req, res) => {
+    const {email, password} = req.body as LoginBody;
+    const user = await client.user.findFirst({
+      where: {
+        email,
+      }
+    });
+    if (!user) {
+      res.status(404).json({ message: "Invalid email or password" });
       return;
     }
 
-    const user = await client.user.findFirst({
-      where: {
-        id: userId
-      }
-    });
+    const isValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isValid) {
+      res.status(404).json({ message: "Invalid email or password" });
+      return;
+    }
 
-    res.json({ user });
-    // TODO get the user
-  }
+    const token = jwt.sign({
+      userId: user.id
+    }, process.env.ENCRYPTION_KEY!!, {
+      expiresIn: '10m'
+    });
+    res.json({
+      user,
+      token
+    })
+};
 
 type CreateUserBody = {
   firstName: string,
@@ -32,6 +50,8 @@ type CreateUserBody = {
 
 const createUser = (client: PrismaClient): RequestHandler =>
   async (req, res) => {
+    console.log("Yo");
+    console.log(req.body);
     const {firstName, lastName, email, password} = req.body as CreateUserBody;
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await client.user.create({
@@ -46,7 +66,7 @@ const createUser = (client: PrismaClient): RequestHandler =>
     const token = jwt.sign({
       userId: user.id
     }, process.env.ENCRYPTION_KEY!!, {
-      expiresIn: '1m'
+      expiresIn: '10m'
     });
 
     res.json({ user, token });
@@ -56,7 +76,7 @@ const createUser = (client: PrismaClient): RequestHandler =>
 export const usersController = controller(
   "users",
   [
-    { path: "/me", endpointBuilder: getMe, method: "get" },
+    { path: "/login", endpointBuilder: getLogin, method: "get" },
     { path: "/", method: "post", endpointBuilder: createUser, skipAuth: true }
   ]
 )
