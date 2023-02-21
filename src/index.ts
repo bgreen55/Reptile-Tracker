@@ -53,14 +53,17 @@ app.post("/sessions",  async (req, res) => {
 
 usersController(app, client);
 
+//this is middleware for index page
 app.get("/", (req, res) => {
   res.send(`<h1>Hello, world!</h1>`);
 });
 
+//middleware for users, returns all users
 app.get("/users", async (req, res) => {
   const users = await client.user.findMany();
   res.json(users);
 });
+
 
 app.listen(parseInt(process.env.PORT || "3000", 10), () => {
   console.log(`App running on port ${process.env.PORT}`);
