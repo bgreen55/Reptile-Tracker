@@ -1,7 +1,8 @@
 import { Request } from "express"
 
 export type JWTBody = {
-  userId: number
+  userId?: number,
+  reptileId?: number
 }
 
 export type RequestWithJWTBody = Request & {

@@ -6,7 +6,8 @@ export type Route = {
   path: string,
   method: "post" | "put" | "get" | "delete",
   endpointBuilder: (client: PrismaClient) => RequestHandler,
-  skipAuth?: boolean
+  skipAuth?: boolean,
+  skipOwner?: boolean
 }
 
 export const controller = (name: string, routes: Route[]) => (app: Express, client: PrismaClient) => {
@@ -15,7 +16,7 @@ export const controller = (name: string, routes: Route[]) => (app: Express, clie
     if (!route.skipAuth) {
       router.use(route.path, (req, res, next) => {
         if (req.method.toLowerCase() === route.method) {
-          authenticationMiddleware(req, res, next);
+          authenticationMiddleware(req, res, next, client);
         } else {
           next();
         }

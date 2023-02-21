@@ -1,6 +1,5 @@
 import express, { RequestHandler } from "express";
 import { PrismaClient, User } from "@prisma/client";
-import bcrypt from 'bcrypt';
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";

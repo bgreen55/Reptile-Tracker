@@ -1,12 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { Express, RequestHandler } from "express";
 import { JWTBody, RequestWithJWTBody } from "../dto/jwt";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { controller } from "../lib/controller";
 
 type CreateScheduleBody = {
-  reptileId : number,
   type : string,
   description : string,
   monday : boolean,
@@ -21,11 +19,12 @@ type CreateScheduleBody = {
 const createSchedule = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
     const userId = req.jwtBody?.userId;
-    if (!userId) {
+    const reptileId = req.jwtBody?.reptileId;
+    if (!userId || !reptileId) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const {reptileId, type, description, monday, tuesday, wednesday, thursday,
+    const {type, description, monday, tuesday, wednesday, thursday,
       friday, saturday, sunday} = req.body as CreateScheduleBody;
     const schedule = await client.schedule.create({
       data: {
@@ -46,39 +45,42 @@ const createSchedule = (client: PrismaClient): RequestHandler =>
   res.json({ schedule });
 }
 
-type GetSchedulesBody = {
-  reptileId : number,
-}
-
-const getAllSchedules = (client: PrismaClient): RequestHandler =>
+const getAllSchedulesFromUser = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
     const userId = req.jwtBody?.userId;
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const {reptileId} = req.body as GetSchedulesBody;
-    if (reptileId in req.body) {
-      const schedules = await client.feeding.findMany({
-        where: {
-          reptileId
-        }
-      });
-      res.json({ schedules });
-    } else {
-      const schedules = await client.schedule.findMany({
-        where: {
-          userId
-        }
-      });
-      res.json({ schedules });
-    }
+    const schedules = await client.schedule.findMany({
+      where: {
+        userId
+      }
+    });
+    res.json({ schedules });
   }
+
+const getAllSchedulesFromReptile = (client: PrismaClient): RequestHandler =>
+async (req : RequestWithJWTBody, res) => {
+  const userId = req.jwtBody?.userId;
+  const reptileId = req.jwtBody?.reptileId;
+  if (!userId || !reptileId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+  const schedules = await client.feeding.findMany({
+    where: {
+      reptileId
+    }
+  });
+  res.json({ schedules });
+}
 
 export const schedulesController = controller(
   "schedules",
   [
-    { path: "/all", method: "get", endpointBuilder: getAllSchedules, skipAuth: false },
+    { path: "/all/user", method: "get", endpointBuilder: getAllSchedulesFromUser, skipAuth: false },
+    { path: "/all/reptile", method: "get", endpointBuilder: getAllSchedulesFromReptile, skipAuth: false },
     { path: "/create", method: "post", endpointBuilder: createSchedule, skipAuth: false }
   ]
 )

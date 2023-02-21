@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Express, RequestHandler } from "express";
 import { JWTBody, RequestWithJWTBody } from "../dto/jwt";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { controller } from "../lib/controller";
 
@@ -32,7 +31,6 @@ const createReptile = (client: PrismaClient): RequestHandler =>
 }
 
 type UpdateReptileBody = {
-  id : number
   species : string
   name : string
   sex : string
@@ -41,14 +39,14 @@ type UpdateReptileBody = {
 const deleteReptile = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
     const userId = req.jwtBody?.userId;
-    if (!userId) {
+    const reptileId = req.jwtBody?.reptileId;
+    if (!userId || !reptileId) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const {id} = req.body as UpdateReptileBody;
     const reptile = await client.reptile.delete({
       where: {
-        id
+        id : reptileId
       },
   });
 
@@ -58,14 +56,15 @@ const deleteReptile = (client: PrismaClient): RequestHandler =>
 const updateReptile = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
     const userId = req.jwtBody?.userId;
-    if (!userId) {
+    const reptileId = req.jwtBody?.reptileId;
+    if (!userId || !reptileId) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const {id, species, name, sex} = req.body as UpdateReptileBody;
+    const {species, name, sex} = req.body as UpdateReptileBody;
     const reptile = await client.reptile.update({
       where: {
-        id
+        id : reptileId
       },
       data: {
         species,
@@ -84,9 +83,12 @@ const getAllReptiltes = (client: PrismaClient): RequestHandler =>
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const reptiles = await client.reptile.findMany({
+    const reptiles = await client.user.findUnique({
       where: {
-        userId
+        id : userId
+      },
+      select: {
+        reptiles : true
       }
   });
 
@@ -96,9 +98,9 @@ const getAllReptiltes = (client: PrismaClient): RequestHandler =>
 export const reptilesController = controller(
   "reptiles",
   [
-    { path: "/delete", method: "delete", endpointBuilder: deleteReptile, skipAuth: false },
-    { path: "/all", method: "get", endpointBuilder: getAllReptiltes, skipAuth: false },
-    { path: "/update", method: "put", endpointBuilder: updateReptile, skipAuth: false },
-    { path: "/create", method: "post", endpointBuilder: createReptile, skipAuth: false }
+    { path: "/delete", method: "delete", endpointBuilder: deleteReptile, skipAuth: false},
+    { path: "/all", method: "get", endpointBuilder: getAllReptiltes, skipAuth: false},
+    { path: "/update", method: "put", endpointBuilder: updateReptile, skipAuth: false},
+    { path: "/create", method: "post", endpointBuilder: createReptile, skipAuth: false}
   ]
 )
