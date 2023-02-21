@@ -74,7 +74,7 @@ const createUser = (client: PrismaClient): RequestHandler =>
 export const usersController = controller(
   "users",
   [
-    { path: "/login", endpointBuilder: getLogin, method: "get" },
+    { path: "/login", endpointBuilder: getLogin, method: "get", skipAuth: true },
     { path: "/create", method: "post", endpointBuilder: createUser, skipAuth: true }
   ]
 )
