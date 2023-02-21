@@ -57,6 +57,11 @@ app.get("/", (req, res) => {
   res.send(`<h1>Hello, world!</h1>`);
 });
 
+app.get("/users", async (req, res) => {
+  const users = await client.user.findMany();
+  res.json(users);
+});
+
 app.listen(parseInt(process.env.PORT || "3000", 10), () => {
   console.log(`App running on port ${process.env.PORT}`);
 });
