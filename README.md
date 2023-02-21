@@ -1,20 +1,55 @@
-This is the readme file
+# REPTILE PROJECT
 
-This will need to be populated with instructions on how to set up and 
-run the server
+## Get Started
+### Clone the repo
+```bash
+git clone git@github.com:bgreen55/Reptile-Tracker.git
+```
+then change directories into it
+
+```bash
+cd Reptile-Tracker
+```
+
+### Install the dependencies
+
+With yarn
+```bash
+yarn
+```
+
+With npm
+```bash
+npm install
+```
+
+## Development
+### Running the server
+Start the server by running:
+
+With yarn
+```bash
+yarn dev
+```
+
+With npm
+```bash
+npm run dev
+```
+
+## Production
+Build the project by running
+
+With yarn
+```bash
+yarn build
+```
+
+With npm
+```bash
+npm run build
+```
 
 
-# **Remember To Pull from The repository before you make and changes locally**
 
-Figure out what yarn.lock and the other lock file are for 
-
-
-
-reference this:
-
-https://github.com/dittonjs/CS4610Spring2023/tree/main/dbAndUserAuth
-
-
-
-We should look at TokenAuth that Ditton uploaded on the 15th.  I think that has the examples used for authentication a user
 
