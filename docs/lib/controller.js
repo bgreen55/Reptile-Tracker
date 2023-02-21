@@ -12,7 +12,7 @@ const controller = (name, routes) => (app, client) => {
         if (!route.skipAuth) {
             router.use(route.path, (req, res, next) => {
                 if (req.method.toLowerCase() === route.method) {
-                    (0, authentication_1.authenticationMiddleware)(req, res, next);
+                    (0, authentication_1.authenticationMiddleware)(req, res, next, client);
                 }
                 else {
                     next();

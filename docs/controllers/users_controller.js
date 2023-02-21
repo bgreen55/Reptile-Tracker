@@ -16,20 +16,32 @@ exports.usersController = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const controller_1 = require("../lib/controller");
-const getMe = (client) => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const userId = (_a = req.jwtBody) === null || _a === void 0 ? void 0 : _a.userId;
-    if (!userId) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-    }
+// log in
+const getLogin = (client) => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
     const user = yield client.user.findFirst({
         where: {
-            id: userId
+            email,
         }
     });
-    res.json({ user });
-    // TODO get the user
+    if (!user) {
+        res.status(404).json({ message: "Invalid email or password" });
+        return;
+    }
+    const isValid = yield bcrypt_1.default.compare(password, user.passwordHash);
+    if (!isValid) {
+        res.status(404).json({ message: "Invalid email or password" });
+        return;
+    }
+    const token = jsonwebtoken_1.default.sign({
+        userId: user.id
+    }, process.env.ENCRYPTION_KEY, {
+        expiresIn: '1000m'
+    });
+    res.json({
+        user,
+        token
+    });
 });
 const createUser = (client) => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { firstName, lastName, email, password } = req.body;
@@ -45,11 +57,11 @@ const createUser = (client) => (req, res) => __awaiter(void 0, void 0, void 0, f
     const token = jsonwebtoken_1.default.sign({
         userId: user.id
     }, process.env.ENCRYPTION_KEY, {
-        expiresIn: '1m'
+        expiresIn: '1000m'
     });
     res.json({ user, token });
 });
 exports.usersController = (0, controller_1.controller)("users", [
-    { path: "/me", endpointBuilder: getMe, method: "get" },
-    { path: "/", method: "post", endpointBuilder: createUser, skipAuth: true }
+    { path: "/login", endpointBuilder: getLogin, method: "get", skipAuth: true },
+    { path: "/create", method: "post", endpointBuilder: createUser, skipAuth: true }
 ]);

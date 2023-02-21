@@ -14,13 +14,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticationMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const authenticationMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const authenticationMiddleware = (req, res, next, client) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    // TODO parse token and find user
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
-    try {
+    verify: try {
+        // Throws error if invalid
         const jwtBody = jsonwebtoken_1.default.verify(token || '', process.env.ENCRYPTION_KEY);
         req.jwtBody = jwtBody;
+        const reptileId = req.body.reptileId;
+        const userId = req.jwtBody.userId;
+        const userReptiles = yield client.user.findMany({
+            where: {
+                id: userId,
+                reptiles: { some: { id: reptileId } }
+            }
+        });
+        // Only adds reptileId to jwtBody if related to user
+        if (Object.keys(userReptiles).length == 0) {
+            break verify;
+        }
+        req.jwtBody = {
+            userId,
+            reptileId
+        };
     }
     catch (error) {
         console.log("token failed validation");
