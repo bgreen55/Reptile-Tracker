@@ -22,6 +22,11 @@ model User {
   schedules Schedule[]
 }
 
+model Test {
+  id Int @id @default(autoincrement())
+  firstName String
+}
+
 model Reptile {
   id Int @id @default(autoincrement())
   user User @relation(fields: [userId], references: [id])
