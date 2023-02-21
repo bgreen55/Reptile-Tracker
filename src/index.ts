@@ -21,6 +21,29 @@ type LoginBody = {
   password: string
 }
 
+type signUpBody = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string
+}
+
+app.post("/users", async (req, res) => {
+  console.log(req.body)
+  console.log(req.body.firstName, req.body.lastName, req.body.email, req.body.password)
+  const {firstName, lastName, email, password} = req.body as signUpBody;
+  const passwordHash = await bcrypt.hash(password, 10); //pretty sure it breaks right here as it says that 'data and salt arguments required'
+  const user = await client.user.create({
+    data: {
+      firstName,
+      lastName,
+      email,
+      passwordHash
+    }
+  });
+  res.json(user);
+});
+
 // log in
 app.post("/sessions",  async (req, res) => {
   const {email, password} = req.body as LoginBody;
@@ -58,10 +81,18 @@ app.get("/", (req, res) => {
   res.send(`<h1>Hello, world!</h1>`);
 });
 
+
+
 //middleware for users, returns all users
 app.get("/users", async (req, res) => {
   const users = await client.user.findMany();
   res.json(users);
+});
+
+//middleware for user to logout
+app.delete("/sessions", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
 });
 
 

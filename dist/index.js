@@ -24,6 +24,19 @@ const client = new client_1.PrismaClient();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
+app.post("/signUp", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { firstName, lastName, email, password } = req.body;
+    const passwordHash = yield bcrypt_1.default.hash(password, 10);
+    const user = yield client.user.create({
+        data: {
+            firstName,
+            lastName,
+            email,
+            passwordHash
+        }
+    });
+    res.json(user);
+}));
 // log in
 app.post("/sessions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
@@ -61,6 +74,11 @@ app.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield client.user.findMany();
     res.json(users);
 }));
+//middleware for user to logout
+app.delete("/sessions", (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Logged out" });
+});
 app.listen(parseInt(process.env.PORT || "3000", 10), () => {
     console.log(`App running on port ${process.env.PORT}`);
 });
