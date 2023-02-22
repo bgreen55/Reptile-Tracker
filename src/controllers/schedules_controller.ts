@@ -68,7 +68,7 @@ async (req : RequestWithJWTBody, res) => {
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
-  const schedules = await client.feeding.findMany({
+  const schedules = await client.schedule.findMany({
     where: {
       reptileId
     }
