@@ -59,7 +59,7 @@ const getAllSchedulesFromReptile = (client) => (req, res) => __awaiter(void 0, v
         res.status(401).json({ message: "Unauthorized" });
         return;
     }
-    const schedules = yield client.feeding.findMany({
+    const schedules = yield client.schedule.findMany({
         where: {
             reptileId
         }
