@@ -175,13 +175,13 @@ app.post("/sessions", async (req, res) => {
     },
   });
   if (!user) {
-    res.status(404).json({ message: "Invalid email or password" });
+    res.status(404).json({ message: "Invalid email or password, user doesnt exist" });
     return;
   }
 
   const isValid = await bcrypt.compare(password, user.passwordHash);
   if (!isValid) {
-    res.status(404).json({ message: "Invalid email or password" });
+    res.status(404).json({ message: "Invalid email or password, password is wrong" });
     return;
   }
 
