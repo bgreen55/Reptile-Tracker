@@ -48,28 +48,25 @@ type CreateUserBody = {
   password: string,
 }
 
+//create new user
 const createUser = (client: PrismaClient): RequestHandler =>
   async (req, res) => {
     const {firstName, lastName, email, password} = req.body as CreateUserBody;
-    //const passwordHash = await bcrypt.hash(password, 10);
-    const passwordHash = await password;
+    const passwordHash = await bcrypt.hash(password, 10);
+    //const passwordHash = await password;
     const user = await client.user.create({
       data: {
         firstName,
         lastName,
         email,
-        passwordHash,
-      },
+        passwordHash
+      }
     });
+    res.json(user);
+  };
 
-    const token = jwt.sign({
-      userId: user.id
-    }, process.env.ENCRYPTION_KEY!!, {
-      expiresIn: '1000m'
-    });
 
-    res.json({ user, token });
-  }
+
 
 
 export const usersController = controller(

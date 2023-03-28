@@ -91,8 +91,8 @@ app.post("/sessions", async (req, res) => {
 //middleware for user to register
 app.post("/users/create", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-  //const passwordHash = await bcrypt.hash(password, 10);
-  const passwordHash = await password;
+  const passwordHash = await bcrypt.hash(password, 10);
+  //const passwordHash = await password;
   const user = await client.user.create({
     data: {
       firstName,
