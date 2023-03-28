@@ -51,7 +51,8 @@ type CreateUserBody = {
 const createUser = (client: PrismaClient): RequestHandler =>
   async (req, res) => {
     const {firstName, lastName, email, password} = req.body as CreateUserBody;
-    const passwordHash = await bcrypt.hash(password, 10);
+    //const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await password;
     const user = await client.user.create({
       data: {
         firstName,
