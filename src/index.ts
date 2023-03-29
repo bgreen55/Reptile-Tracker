@@ -81,6 +81,15 @@ app.get("/login", (req, res) => {
     const result = await response.json();
     console.log(result);
 
+    //if login is successful, redirect to dashboard
+    if (result.token) {
+      window.location.href = "/dashboard";
+
+    //if login is unsuccessful, alert user
+    } else {
+      alert("Invalid email or password");
+
+    }
 
 
   }
