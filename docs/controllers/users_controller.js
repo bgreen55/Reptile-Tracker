@@ -43,24 +43,20 @@ const getLogin = (client) => (req, res) => __awaiter(void 0, void 0, void 0, fun
         token
     });
 });
+//create new user
 const createUser = (client) => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { firstName, lastName, email, password } = req.body;
-    //const passwordHash = await bcrypt.hash(password, 10);
-    const passwordHash = yield password;
+    const passwordHash = yield bcrypt_1.default.hash(password, 10);
+    //const passwordHash = await password;
     const user = yield client.user.create({
         data: {
             firstName,
             lastName,
             email,
-            passwordHash,
-        },
+            passwordHash
+        }
     });
-    const token = jsonwebtoken_1.default.sign({
-        userId: user.id
-    }, process.env.ENCRYPTION_KEY, {
-        expiresIn: '1000m'
-    });
-    res.json({ user, token });
+    res.json(user);
 });
 exports.usersController = (0, controller_1.controller)("users", [
     { path: "/login", endpointBuilder: getLogin, method: "get", skipAuth: true },

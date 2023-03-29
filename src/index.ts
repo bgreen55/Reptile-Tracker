@@ -46,18 +46,56 @@ app.get("/", (req, res) => {
     // I should be able to sign into a user account
     // I should be able to navigate to the signup page
     // Upon signing in, I should be redirected to the dashboard page
+    //login is a get request, headers are content type json, body is email and password
+  
+
+  //on button click run the pullData function
+
+
+  
 
 app.get("/login", (req, res) => {
   res.send(`
+  <script>
+  async function pullData() {
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var data = {
+      "email": email,
+      "password": password,
+    };
+    //console.log(data);
+    
+    //parse data into json
+    var json = JSON.stringify(data);
+    console.log(json);
+
+    //send data to server
+    const response = await fetch("/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
+    const result = await response.json();
+    console.log(result);
+
+
+
+  }
+  </script>
     <h1>Login</h1>
-    <form action="/sessions" method="POST">
-      <input type="email" name="email" placeholder="Email" />
-      <input type="password" name="password" placeholder="Password" />
-      <button type="submit">Login</button>
-    </form>
+      <input type="text" id="email" name="email" placeholder="Email" />
+      <input type="password" id="password" name="password" placeholder="Password" />
+      <button onclick="pullData()">Login</button>
+    
     <a href="/signup">Signup</a>
     <a href="/">Home</a>
   `);
+
+
+
 });
 
 //signup page  
@@ -167,7 +205,7 @@ app.get("/users", async (req, res) => {
 });
 
 //middleware for user to login
-app.post("/sessions", async (req, res) => {
+app.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await client.user.findFirst({
     where: {
