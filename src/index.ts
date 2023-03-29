@@ -114,14 +114,47 @@ app.get("/login", (req, res) => {
 
 app.get("/signup", (req, res) => {
   res.send(`
+  <script>
+  async function pullData() {
+    var fname = document.getElementById("fname").value;
+    var lname = document.getElementById("lname").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var data = {
+      "firstName": fname,
+      "lastName": lname,
+      "email": email,
+      "password": password,
+    };
+    console.log(data);
+    
+    //parse data into json
+    var json = JSON.stringify(data);
+    //console.log(json);
+
+    //send data to server
+    const response = await fetch("/users/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
+    const result = await response.json();
+    console.log(result);
+
+    alert("Account created successfully, please login using those same credentials");
+
+
+  }
+  </script>
     <h1>Signup</h1>
-    <form action="/users/create" method="POST">
-      <input type="text" name="firstName" placeholder="First Name" />
-      <input type="text" name="lastName" placeholder="Last Name" />
-      <input type="email" name="email" placeholder="Email" />
-      <input type="password" name="password" placeholder="Password" />
-      <button type="submit">Signup</button>
-    </form>
+      <input type="text" id="fname" name="fname" placeholder="First Name" />
+      <input type="text" id="lname" name="lname" placeholder="Last Name" />
+      <input type="text" id="email" name="email" placeholder="Email" />
+      <input type="password" id="password" name="password" placeholder="Password" />
+      <button onclick="pullData()">Signup</button>
+    
     <a href="/login">Login</a>
     <a href="/">Home</a>
   `);
@@ -257,14 +290,12 @@ app.post("/users/login", async (req, res) => {
 
 //middleware for dashboard
   // Dashboard Page
-
     // I should see all of the schedules for my user for the day of the week it is (for example, if it is Monday then I should only see the schedules that have me doing something on Monday.)
     // I should see a list of all my reptiles
     // When selecting a reptile the app should navigate to the Reptile page
     // I should be able to create a new reptile (you can do this on this page via something like a pop up, or you can create a new page for this)
     // I should be able to delete a reptile.
     // I should be able to log out of my account
-
 app.get("/dashboard", async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
@@ -283,13 +314,54 @@ app.get("/dashboard", async (req, res) => {
     res.redirect("/login");
     return;
   }
-
+  const reptiles = await client.reptile.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+  //list all the reptiles in the output
   res.send(`
-
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    
+  </head>
+  <body>
     <h1>Dashboard</h1>
     <p>Welcome ${user.firstName} ${user.lastName}</p>
     <a href="/logout">Logout</a>
     <a href="/">Home</a>
+    <h2>Reptiles</h2>
+    <ul>
+      ${reptiles
+        .map(
+          (reptile) => `
+        <li>
+          <a href="/reptile/${reptile.id}">${reptile.name}</a>
+        </li>
+      `
+        )
+        .join("")}
+    </ul>
+
+    <h2>Create Reptile</h2>
+    <form method="POST" action="/reptile/create">
+      <input name="name" placeholder="Name" />
+      <input name="species" placeholder="Species" />
+
+      <button>Create Reptile</button>
+    </form>
+
+  </body>
+  </html>
+
+
+
+    
   `);
 });
 
