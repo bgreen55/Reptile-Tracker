@@ -1,7 +1,6 @@
 
 // im trying to implement Dittons authFrontend in these pages
 
-
 import { Link } from "react-router-dom"
 
 export const Home = () => {

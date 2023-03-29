@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/auth";
 import { useApi } from "../hooks/useApi";
 
-export const SignUp = () => {
+export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword]= useState("");
   const api = useApi();
@@ -36,7 +36,9 @@ export const SignUp = () => {
     </form>
 
 
-
+ 
+  )
+}
 
 
 
@@ -47,11 +49,3 @@ export const SignUp = () => {
     
     // <a href="/signup">Signup</a>
     // <a href="/">Home</a>
-
-
-
- 
-  )
-}
-
-
