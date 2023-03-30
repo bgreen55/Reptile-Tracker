@@ -9,7 +9,7 @@ export const Root = () => {
   
     return (
       <div>
-        <nav className="navbar">{name}</nav>
+        <h1>{name}</h1>
         {/* Adds children router elements */}
         <Outlet />
       </div>

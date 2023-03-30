@@ -62,7 +62,17 @@ const createUser = (client: PrismaClient): RequestHandler =>
         passwordHash
       }
     });
-    res.json(user);
+
+    const token = jwt.sign({
+      userId: user.id
+    }, process.env.ENCRYPTION_KEY!!, {
+      expiresIn: '1000m'
+    });
+    
+    res.json({
+      user,
+      token
+    })
   };
 
 
@@ -72,7 +82,7 @@ const createUser = (client: PrismaClient): RequestHandler =>
 export const usersController = controller(
   "users",
   [
-    { path: "/login", endpointBuilder: getLogin, method: "get", skipAuth: true},
+    { path: "/login", endpointBuilder: getLogin, method: "post", skipAuth: true},
     { path: "/create", method: "post", endpointBuilder: createUser, skipAuth: true}
   ]
 )

@@ -3,6 +3,7 @@ import { PrismaClient, User } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import cors from "cors";
 import { JWTBody, RequestWithJWTBody } from "./dto/jwt";
 import { usersController } from "./controllers/users_controller";
 import { reptilesController } from "./controllers/reptiles_controller";
@@ -15,6 +16,7 @@ dotenv.config();
 const client = new PrismaClient();
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -40,71 +42,6 @@ app.get("/", (req, res) => {
     <a href="/login">Login</a>
     <a href="/signup">Signup</a>
   `);
-});
-
-//login page
-    // I should be able to sign into a user account
-    // I should be able to navigate to the signup page
-    // Upon signing in, I should be redirected to the dashboard page
-    //login is a get request, headers are content type json, body is email and password
-  
-
-  //on button click run the pullData function
-
-
-  
-
-app.get("/login", (req, res) => {
-  res.send(`
-  <script>
-  async function pullData() {
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var data = {
-      "email": email,
-      "password": password,
-    };
-    //console.log(data);
-    
-    //parse data into json
-    var json = JSON.stringify(data);
-    console.log(json);
-
-    //send data to server
-    const response = await fetch("/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: json,
-    });
-    const result = await response.json();
-    console.log(result);
-
-    //if login is successful, redirect to dashboard
-    if (result.token) {
-      window.location.href = "/dashboard";
-
-    //if login is unsuccessful, alert user
-    } else {
-      alert("Invalid email or password");
-
-    }
-
-
-  }
-  </script>
-    <h1>Login</h1>
-      <input type="text" id="email" name="email" placeholder="Email" />
-      <input type="password" id="password" name="password" placeholder="Password" />
-      <button onclick="pullData()">Login</button>
-    
-    <a href="/signup">Signup</a>
-    <a href="/">Home</a>
-  `);
-
-
-
 });
 
 //signup page  
