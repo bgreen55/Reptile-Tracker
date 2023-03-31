@@ -29,7 +29,7 @@ export const Signup = () => {
         //console.log(json);
     
         //send data to server
-        const response = await fetch("http://localhost:3000/users/create", {
+        const response = await fetch("/users/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

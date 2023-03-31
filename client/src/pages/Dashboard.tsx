@@ -48,7 +48,7 @@ export const Dashboard = () => {
     const navigate = useNavigate();
     
     async function pullData() {
-        fetch("http://localhost:3000/schedules/all/user", {
+        fetch("/schedules/all/user", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export const Dashboard = () => {
             }
         });
 
-        fetch("http://localhost:3000/reptiles/all", {
+        fetch("/reptiles/all", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

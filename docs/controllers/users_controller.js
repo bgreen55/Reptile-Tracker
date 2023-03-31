@@ -56,9 +56,17 @@ const createUser = (client) => (req, res) => __awaiter(void 0, void 0, void 0, f
             passwordHash
         }
     });
-    res.json(user);
+    const token = jsonwebtoken_1.default.sign({
+        userId: user.id
+    }, process.env.ENCRYPTION_KEY, {
+        expiresIn: '1000m'
+    });
+    res.json({
+        user,
+        token
+    });
 });
 exports.usersController = (0, controller_1.controller)("users", [
-    { path: "/login", endpointBuilder: getLogin, method: "get", skipAuth: true },
+    { path: "/login", endpointBuilder: getLogin, method: "post", skipAuth: true },
     { path: "/create", method: "post", endpointBuilder: createUser, skipAuth: true }
 ]);
