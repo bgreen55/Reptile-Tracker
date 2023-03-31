@@ -15,8 +15,6 @@ const createFeeding = (client: PrismaClient): RequestHandler =>
 
     const userId = req.jwtBody?.userId;
     const reptiles = req.jwtBody?.reptiles;
-    console.log(userId);
-    console.log(reptiles);
     if (!userId || !reptiles || !(reptiles.includes(reptileId))) {
       res.status(401).json({ message: "Unauthorized" });
       return;

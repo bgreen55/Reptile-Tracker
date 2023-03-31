@@ -22,11 +22,9 @@ export const Signup = () => {
             email,
             password
         };
-        console.log(data);
         
         //parse data into json
         var json = JSON.stringify(data);
-        //console.log(json);
     
         //send data to server
         const response = await fetch("/users/create", {
@@ -37,7 +35,6 @@ export const Signup = () => {
           body: json,
         });
         const result = await response.json();
-        console.log(result);
 
         //if login is successful, redirect to dashboard
         if (result.token) {

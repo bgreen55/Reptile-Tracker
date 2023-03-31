@@ -8,7 +8,21 @@
 
 .feeding {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.husbandry {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.schedule {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
     margin-top: 4px;
     margin-bottom: 4px;
 }

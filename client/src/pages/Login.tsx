@@ -25,7 +25,6 @@ export const Login = () => {
         };
 
         var json = JSON.stringify(data);
-        console.log(json);
 
         //send data to server
         const response = await fetch("/users/login", {
@@ -36,7 +35,6 @@ export const Login = () => {
         body: json,
         });
         const result = await response.json();
-        console.log(result);
 
         //if login is successful, redirect to dashboard
         if (result.token) {

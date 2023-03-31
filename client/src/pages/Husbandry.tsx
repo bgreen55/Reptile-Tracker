@@ -6,22 +6,28 @@ import { useNavigate, useParams } from "react-router-dom";
     // I should be able to navigate to the Login page
     // Upon creating an account I should be redirected to the dashboard page
 
-export const Feeding = () => {
+export const Husbandry = () => {
 
     const navigate = useNavigate();
 
-    const [food, setFood] = useState("");
+    const [length, setLength] = useState<number>();
+    const [weight, setWeight] = useState<number>();
+    const [temperature, setTemperature] = useState<number>();
+    const [humidity, setHumidity] = useState<number>();
     const { id }  = useParams();
     
-    async function createFood() {
+    async function createHusbandry() {
         var data = {
             reptileId: Number(id),
-            foodItem: food,
+            length,
+            weight,
+            temperature,
+            humidity,
         };
 
         var json = JSON.stringify(data);
     
-        const response = await fetch("/feedings/create", {
+        const response = await fetch("/husbandry/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -31,7 +37,7 @@ export const Feeding = () => {
         })
         .then((response) => response.json())
         .then((json) => {
-            if (json.feeding) {
+            if (json.husbandry) {
                 navigate(`/reptile/${id}`, {replace: false});
             }
         });
@@ -45,8 +51,11 @@ export const Feeding = () => {
             </ul></nav>
             <h1>Create</h1>
             <div className="input-container">
-                <input type="text" onChange={(event) => {setFood(event.target.value)}} value={food} placeholder="Food" />
-                <button onClick={createFood}>Confirm</button>
+                <input type="number" onChange={(event) => {setLength(Number(event.target.value))}} value={length} placeholder="Length" />
+                <input type="number" onChange={(event) => {setWeight(Number(event.target.value))}} value={weight} placeholder="Weight" />
+                <input type="number" onChange={(event) => {setTemperature(Number(event.target.value))}} value={temperature} placeholder="Temperature" />
+                <input type="number" onChange={(event) => {setHumidity(Number(event.target.value))}} value={humidity} placeholder="Humidity" />
+                <button onClick={createHusbandry}>Confirm</button>
             </div>
         </div>
     );

@@ -123,14 +123,14 @@ export const Dashboard = () => {
             <h1>Dashboard</h1>
             <h2>Schedules for {dayOfWeek}: </h2>
             <div className="container">
-                <div className="schedule attributes">
+                <div className="quick-schedule attributes">
                     <span>ID</span>
                     <span>Reptile ID</span>
                     <span>Type</span>
                     <span>Description</span>
                 </div>
                 {schedules.filter((schedule) => {if (hasKey(schedule, dayOfWeek)) {return schedule[dayOfWeek] === true;}}).map((schedule) => (
-                    <div key={schedule.id} className="schedule">
+                    <div key={schedule.id} className="quick-schedule">
                         <span>{schedule.id}</span>
                         <span>{schedule.reptileId}</span>
                         <span>{schedule.type}</span>

@@ -18,12 +18,10 @@ export const authenticationMiddleware = async (req: RequestWithJWTBody, res : Re
         }
     });
     // Only adds reptileId to jwtBody if related to user
-    console.log(userReptiles);
     const reptiles : number[] = [];
     userReptiles.forEach((reptile) => {
       reptiles.push(reptile.id);
     })
-    console.log(reptiles);
     if (Object.keys(userReptiles).length == 0) {
         break verify;
     }
