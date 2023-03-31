@@ -13,7 +13,7 @@ cd Reptile-Tracker
 
 ### Install the dependencies
 
-With yarn
+Install server dependencies with yarn
 ```bash
 yarn
 ```
@@ -23,7 +23,34 @@ With npm
 npm install
 ```
 
+Install client dependencies with yarn
+```bash
+cd client
+yarn
+```
+
+With npm
+```bash
+cd client
+npm install
+```
+
 ## Development
+### Running the client
+Start the client by running:
+
+With yarn
+```bash
+cd client
+yarn dev
+```
+
+With npm
+```bash
+cd client
+npm run dev
+```
+
 ### Running the server
 Start the server by running:
 
