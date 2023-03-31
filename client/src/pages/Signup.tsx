@@ -51,14 +51,17 @@ export const Signup = () => {
 
     return (
         <div>
-            <input type="text" id="fname" name="fname" onChange={(event) => {setFirstName(event.target.value)}} placeholder="First Name" />
-            <input type="text" id="lname" name="lname" onChange={(event) => {setLastname(event.target.value)}} placeholder="Last Name" />
-            <input type="text" id="email" name="email" onChange={(event) => {setEmail(event.target.value)}} placeholder="Email" />
-            <input type="password" id="password" name="password" onChange={(event) => {setPassword(event.target.value)}} placeholder="Password" />
-            <button onClick={pullData}>Signup</button>
-            
-            <button onClick={() => navigate("/login", {replace: false})}>Login Bro</button>
-            <button onClick={() => navigate("/", {replace: false})}>Home</button>
+            <nav><ul>
+                <li><button onClick={() => navigate("/login", {replace: false})}>Login</button></li>
+            </ul></nav>
+            <h1>Signup</h1>
+            <div className="input-container">
+                <input type="text" id="fname" name="fname" onChange={(event) => {setFirstName(event.target.value)}} placeholder="First Name" />
+                <input type="text" id="lname" name="lname" onChange={(event) => {setLastname(event.target.value)}} placeholder="Last Name" />
+                <input type="text" id="email" name="email" onChange={(event) => {setEmail(event.target.value)}} placeholder="Email" />
+                <input type="password" id="password" name="password" onChange={(event) => {setPassword(event.target.value)}} placeholder="Password" />
+                <button onClick={pullData}>Confirm</button>
+            </div>
         </div>
     );
 }

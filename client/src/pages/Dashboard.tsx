@@ -89,8 +89,10 @@ export const Dashboard = () => {
 
     return (
         <div>
-            <button onClick={logout}>Logout</button>
-
+            <nav><ul>
+                <li><button onClick={logout}>Logout</button></li>
+            </ul></nav>
+            <h1>Dashboard</h1>
             <h2>Schedules for {dayOfWeek}: </h2>
             <div className="container">
                 <div className="schedule attributes">
