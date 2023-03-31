@@ -3,7 +3,8 @@ import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Create } from './pages/Create';
-import { Reptiles } from './pages/Reptiles';
+import { Reptile } from './pages/Reptile';
+import { Feeding } from './pages/Feeding';
 import { Root } from './pages/Root';
 import './App.css';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
@@ -35,8 +36,12 @@ function App() {
           element: <Create />
         },
         {
-          path: 'reptiles',
-          element: <Reptiles />
+          path: 'reptile/:id',
+          element: <Reptile />
+        },
+        {
+          path: 'reptile/:id/feeding',
+          element: <Feeding />
         },
       ]
     },

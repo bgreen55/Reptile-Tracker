@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { controller } from "../lib/controller";
 
 type CreateScheduleBody = {
+  reptileId : number,
   type : string,
   description : string,
   monday : boolean,
@@ -18,14 +19,15 @@ type CreateScheduleBody = {
 
 const createSchedule = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
+    const {reptileId, type, description, monday, tuesday, wednesday, thursday,
+      friday, saturday, sunday} = req.body as CreateScheduleBody;
+
     const userId = req.jwtBody?.userId;
-    const reptileId = req.jwtBody?.reptileId;
-    if (!userId || !reptileId) {
+    const reptiles = req.jwtBody?.reptiles;
+    if (!userId || !reptiles || ! (reptiles.includes(reptileId))) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const {type, description, monday, tuesday, wednesday, thursday,
-      friday, saturday, sunday} = req.body as CreateScheduleBody;
     const schedule = await client.schedule.create({
       data: {
         reptile: {connect : { id: reptileId }},
@@ -62,9 +64,11 @@ const getAllSchedulesFromUser = (client: PrismaClient): RequestHandler =>
 
 const getAllSchedulesFromReptile = (client: PrismaClient): RequestHandler =>
 async (req : RequestWithJWTBody, res) => {
+  const reptileId = Number(req.params.reptileId);
+
   const userId = req.jwtBody?.userId;
-  const reptileId = req.jwtBody?.reptileId;
-  if (!userId || !reptileId) {
+  const reptiles = req.jwtBody?.reptiles;
+  if (!userId || !reptiles || !(reptiles.includes(reptileId))) {
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
@@ -80,7 +84,7 @@ export const schedulesController = controller(
   "schedules",
   [
     { path: "/all/user", method: "get", endpointBuilder: getAllSchedulesFromUser, skipAuth: false },
-    { path: "/all/reptile", method: "get", endpointBuilder: getAllSchedulesFromReptile, skipAuth: false },
+    { path: "/all/reptile/:reptileId", method: "get", endpointBuilder: getAllSchedulesFromReptile, skipAuth: false },
     { path: "/create", method: "post", endpointBuilder: createSchedule, skipAuth: false }
   ]
 )

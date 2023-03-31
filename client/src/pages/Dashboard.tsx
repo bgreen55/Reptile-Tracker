@@ -155,7 +155,7 @@ export const Dashboard = () => {
                         <span>{reptile.species}</span>
                         <span>{reptile.sex}</span>
                         <button onClick={() => deleteReptile(reptile.id)}>Delete</button>
-                        <button onClick={() => navigate("/reptiles", {replace: false})}>Edit</button>
+                        <button onClick={() => navigate(`/reptile/${reptile.id}`, {replace: false})}>View</button>
                     </div>
                 ))}
                 <button className="add-reptile" onClick={() => {navigate("/create", {replace: false})}}>Create</button>

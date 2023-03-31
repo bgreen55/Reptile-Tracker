@@ -30,17 +30,17 @@ const createReptile = (client: PrismaClient): RequestHandler =>
   res.json({ reptile });
 }
 
-type UpdateReptileBody = {
-  species : string
-  name : string
-  sex : string
+type DeleteReptileBody = {
+  reptileId : number
 }
 
 const deleteReptile = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
+    const {reptileId} = req.body as DeleteReptileBody;
+
     const userId = req.jwtBody?.userId;
-    const reptileId = req.jwtBody?.reptileId;
-    if (!userId || !reptileId) {
+    const reptiles = req.jwtBody?.reptiles;
+    if (!userId || !reptiles || !(reptiles.includes(reptileId))) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
@@ -53,15 +53,29 @@ const deleteReptile = (client: PrismaClient): RequestHandler =>
   res.json({ reptile });
 }
 
+type UpdateReptileBody = {
+  reptileId : number
+  species : string
+  name : string
+  sex : string
+}
+
 const updateReptile = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
+    const {reptileId, species, name, sex} = req.body as UpdateReptileBody;
+
     const userId = req.jwtBody?.userId;
-    const reptileId = req.jwtBody?.reptileId;
-    if (!userId || !reptileId) {
+    const reptiles = req.jwtBody?.reptiles;
+    console.log("UPDATING");
+    console.log(reptileId);
+    console.log(reptiles);
+    if (reptiles) {
+      console.log(reptiles.includes(reptileId));
+    }
+    if (!userId || !reptiles || !(reptiles.includes(reptileId))) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const {species, name, sex} = req.body as UpdateReptileBody;
     const reptile = await client.reptile.update({
       where: {
         id : reptileId

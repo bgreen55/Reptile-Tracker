@@ -10,23 +10,27 @@ export const authenticationMiddleware = async (req: RequestWithJWTBody, res : Re
     const jwtBody = jwt.verify(token || '', process.env.ENCRYPTION_KEY!!) as JWTBody;
     req.jwtBody = jwtBody;
 
-    const reptileId = req.body.reptileId;
     const userId = req.jwtBody.userId;
 
-    const userReptiles = await client.user.findMany({
+    const userReptiles = await client.reptile.findMany({
         where: {
-        id : userId,
-        reptiles : {some : {id : reptileId}}
+        userId : userId,
         }
     });
     // Only adds reptileId to jwtBody if related to user
+    console.log(userReptiles);
+    const reptiles : number[] = [];
+    userReptiles.forEach((reptile) => {
+      reptiles.push(reptile.id);
+    })
+    console.log(reptiles);
     if (Object.keys(userReptiles).length == 0) {
         break verify;
     }
 
     req.jwtBody = {
       userId,
-      reptileId
+      reptiles,
     }
   } catch (error) {
     console.log("token failed validation");

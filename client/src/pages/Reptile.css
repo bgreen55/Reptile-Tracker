@@ -1,0 +1,35 @@
+.container {
+    border: 1px solid black;
+}
+
+.attributes {
+    border-bottom: 1px solid black;
+}
+
+.feeding {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.add-button {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 4px;
+    width: 20%;
+}
+
+button {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+span {
+    margin-left: 1em;
+    margin-right: 1em;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+  }

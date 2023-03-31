@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { controller } from "../lib/controller";
 
 type CreateHusbandryBody = {
+  reptileId : number,
   length : number,
   weight : number,
   temperature : number,
@@ -13,11 +14,11 @@ type CreateHusbandryBody = {
 
 const createHusbandry = (client: PrismaClient): RequestHandler =>
 async (req : RequestWithJWTBody, res) => {
-    const {length, weight, temperature, humidity} = req.body as CreateHusbandryBody;
+    const {reptileId, length, weight, temperature, humidity} = req.body as CreateHusbandryBody;
     
     const userId = req.jwtBody?.userId;
-    const reptileId = req.jwtBody?.reptileId;
-    if (!userId || !reptileId) {
+    const reptiles = req.jwtBody?.reptiles;
+    if (!userId || !reptiles || !(reptiles.includes(reptileId))) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
@@ -37,10 +38,11 @@ async (req : RequestWithJWTBody, res) => {
 
 const getAllHusbandry = (client: PrismaClient): RequestHandler =>
   async (req : RequestWithJWTBody, res) => {
+    const reptileId = Number(req.params.reptileId);
 
     const userId = req.jwtBody?.userId;
-    const reptileId = req.jwtBody?.reptileId;
-    if (!userId || !reptileId) {
+    const reptiles = req.jwtBody?.reptiles;
+    if (!userId || !reptiles || !(reptiles.includes(reptileId))) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
@@ -57,7 +59,7 @@ const getAllHusbandry = (client: PrismaClient): RequestHandler =>
 export const husbandryController = controller(
   "husbandry",
   [
-    { path: "/all", method: "get", endpointBuilder: getAllHusbandry, skipAuth: false },
+    { path: "/all/:reptileId", method: "get", endpointBuilder: getAllHusbandry, skipAuth: false },
     { path: "/create", method: "post", endpointBuilder: createHusbandry, skipAuth: false }
   ]
 )
