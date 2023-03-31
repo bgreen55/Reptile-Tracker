@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import './Dashboard.css';
 
 type ScheduleBody = {
-    id: number,
-    reptileId: number,
-    userId: number,
+    id : number,
+    reptileId : number,
+    userId : number,
     type : string,
     description : string,
     monday : boolean,
@@ -47,6 +47,11 @@ export const Dashboard = () => {
 
     const navigate = useNavigate();
     
+    // So typescript allows indexing schedule body with string variables
+    function hasKey<O>(obj: ScheduleBody, key: PropertyKey): key is keyof O {
+        return key in obj;
+    }
+
     async function pullData() {
         fetch("/schedules/all/user", {
             method: "GET",
@@ -83,6 +88,29 @@ export const Dashboard = () => {
         navigate("/", {replace: false});
     }
 
+    function deleteReptile(reptileId : number) {
+        var data = {
+            reptileId
+        };
+  
+        var json = JSON.stringify(data);
+        
+        fetch("/reptiles/delete", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `"Bearer ${localStorage.getItem("token")}`,
+            },
+            body: json,
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            if (json.reptile) {
+                pullData();
+            }
+        });
+    }
+
     useEffect(() => {
         pullData();
     }, []);
@@ -101,8 +129,8 @@ export const Dashboard = () => {
                     <span>Type</span>
                     <span>Description</span>
                 </div>
-                {schedules.map((schedule) => (
-                    <div className="schedule">
+                {schedules.filter((schedule) => {if (hasKey(schedule, dayOfWeek)) {return schedule[dayOfWeek] === true;}}).map((schedule) => (
+                    <div key={schedule.id} className="schedule">
                         <span>{schedule.id}</span>
                         <span>{schedule.reptileId}</span>
                         <span>{schedule.type}</span>
@@ -121,14 +149,16 @@ export const Dashboard = () => {
                     <span></span>
                 </div>
                 {reptiles.map((reptile) => (
-                    <div className="reptile">
+                    <div key={reptile.id} className="reptile">
                         <span>{reptile.id}</span>
                         <span>{reptile.name}</span>
                         <span>{reptile.species}</span>
                         <span>{reptile.sex}</span>
-                        <button>Delete</button>
+                        <button onClick={() => deleteReptile(reptile.id)}>Delete</button>
+                        <button onClick={() => navigate("/reptiles", {replace: false})}>Edit</button>
                     </div>
                 ))}
+                <button className="add-reptile" onClick={() => {navigate("/create", {replace: false})}}>Create</button>
             </div>
 
         </div>
