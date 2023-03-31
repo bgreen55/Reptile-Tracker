@@ -57,7 +57,7 @@ export const Signup = () => {
             <input type="password" id="password" name="password" onChange={(event) => {setPassword(event.target.value)}} placeholder="Password" />
             <button onClick={pullData}>Signup</button>
             
-            <button onClick={() => navigate("/login", {replace: false})}>Login</button>
+            <button onClick={() => navigate("/login", {replace: false})}>Login Bro</button>
             <button onClick={() => navigate("/", {replace: false})}>Home</button>
         </div>
     );

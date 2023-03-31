@@ -35,14 +35,29 @@ schedulesController(app, client);
     // I should be able to navigate to the Signup page
 
 
+// app.get("/", (req, res) => {
+//   res.send(
+  
+//   //   `
+//   //   <h1>Reptile Manager</h1>
+//   //   <p>Reptile Manager is a web application that allows users to track their reptiles and their care.</p>
+//   //   <a href="/login">Login</a>
+//   //   <a href="/signup">Signup</a>
+//   // `
+//   );
+// });
+
+
+// this app.get will be used to connect to the client side from the server side
+// I should be able post the pages in the client directory from here
 app.get("/", (req, res) => {
-  res.send(`
-    <h1>Reptile Manager</h1>
-    <p>Reptile Manager is a web application that allows users to track their reptiles and their care.</p>
-    <a href="/login">Login</a>
-    <a href="/signup">Signup</a>
-  `);
+  res.send(
+  `<script src="../src/main.tsx"></script>`
+
+  );
 });
+
+
 
 //signup page  
     // I should be able to create a user account

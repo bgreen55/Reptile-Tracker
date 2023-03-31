@@ -40,9 +40,9 @@ app.use((0, cookie_parser_1.default)());
 // I should be able to navigate to the Signup page
 app.get("/", (req, res) => {
     res.send(
-      <script src="../client/src/pages/Home.tsx"></script>
+      <script src="../src/pages/Home.tsx"></script>
   //     `
-  //   <h1>Reptile Manager</h1>
+  //   <h1>Reptile Manageeeer</h1>
   //   <p>Reptile Manager is a web application that allows users to track their reptiles and their care.</p>
   //   <a href="/login">Login</a>
   //   <a href="/signup">Signup</a>
@@ -145,7 +145,7 @@ app.get("/signup", (req, res) => {
 
   }
   </script>
-    <h1>Signup</h1>
+    <h1>Signup Bro</h1>
       <input type="text" id="fname" name="fname" placeholder="First Name" />
       <input type="text" id="lname" name="lname" placeholder="Last Name" />
       <input type="text" id="email" name="email" placeholder="Email" />
