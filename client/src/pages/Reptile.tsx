@@ -113,7 +113,6 @@ export const Reptile = () => {
                 {feedings.map((feeding) => (
                     <div key={feeding.id} className="feeding">
                         <span>{feeding.id}</span>
-                        <span>{feeding.reptileId}</span>
                         <span>{feeding.foodItem}</span>
                     </div>
                 ))}

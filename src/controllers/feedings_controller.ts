@@ -19,6 +19,11 @@ const createFeeding = (client: PrismaClient): RequestHandler =>
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
+
+    if (foodItem == "") {
+      res.status(400).json({ message: "Bad Request"});
+      return;
+    }
     
     const feeding = await client.feeding.create({
       data: {

@@ -33,6 +33,8 @@ export const Feeding = () => {
         .then((json) => {
             if (json.feeding) {
                 navigate(`/reptile/${id}`, {replace: false});
+            } else if (json.message) {
+                alert(json.message);
             }
         });
 
@@ -41,7 +43,7 @@ export const Feeding = () => {
     return (
         <div>
             <nav><ul>
-                <li><button onClick={() => navigate("/dashboard", {replace: false})}>Dashboard</button></li>
+                <li><button onClick={() => navigate(`/reptile/${id}`, {replace: false})}>Reptile</button></li>
             </ul></nav>
             <h1>Create</h1>
             <div className="input-container">

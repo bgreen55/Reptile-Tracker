@@ -37,6 +37,8 @@ export const Update = () => {
         .then((json) => {
             if (json.reptile) {
                 navigate(`/reptile/${id}`, {replace: false});
+            } else if (json.message) {
+                alert(json.message);
             }
         });
 
@@ -45,7 +47,7 @@ export const Update = () => {
     return (
         <div>
             <nav><ul>
-                <li><button onClick={() => navigate("/dashboard", {replace: false})}>Dashboard</button></li>
+                <li><button onClick={() => navigate(`/reptile/${id}`, {replace: false})}>Reptile</button></li>
             </ul></nav>
             <h1>Update</h1>
             <div className="input-container">

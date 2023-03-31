@@ -18,6 +18,12 @@ const createReptile = (client: PrismaClient): RequestHandler =>
       return;
     }
     const {species, name, sex} = req.body as CreateReptileBody;
+
+    if (!(species != "" && name != "" && (sex == "male" || sex == "female"))) {
+      res.status(400).json({ message: "Bad Request"});
+      return;
+    }
+
     const reptile = await client.reptile.create({
       data: {
         user: {connect : { id: userId }},
@@ -70,6 +76,12 @@ const updateReptile = (client: PrismaClient): RequestHandler =>
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
+
+    if (!(species != "" && name != "" && (sex == "male" || sex == "female"))) {
+      res.status(400).json({ message: "Bad Request"});
+      return;
+    }
+
     const reptile = await client.reptile.update({
       where: {
         id : reptileId

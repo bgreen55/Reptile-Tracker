@@ -41,9 +41,10 @@ export const Signup = () => {
             localStorage.setItem("token", result.token);
             localStorage.setItem("userId", result.user.id);
             navigate("/dashboard", {replace: false});
+        } else if (result.message) {
+            alert(result.message);
         }
-    
-        alert("Account created successfully, please login using those same credentials");
+            
       }
 
     return (

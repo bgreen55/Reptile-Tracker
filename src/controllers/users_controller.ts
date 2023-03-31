@@ -54,6 +54,12 @@ const createUser = (client: PrismaClient): RequestHandler =>
     const {firstName, lastName, email, password} = req.body as CreateUserBody;
     const passwordHash = await bcrypt.hash(password, 10);
     //const passwordHash = await password;
+
+    if (!(firstName != "" && lastName != "" && email != "" && password != "")) {
+      res.status(400).json({ message: "Bad Request"});
+      return;
+    }
+
     const user = await client.user.create({
       data: {
         firstName,

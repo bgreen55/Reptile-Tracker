@@ -22,6 +22,11 @@ async (req : RequestWithJWTBody, res) => {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
+
+    if (!(!isNaN(length) && length > 0 && !isNaN(weight) && weight > 0 && !isNaN(temperature) && !isNaN(humidity) && humidity > 0)) {
+      res.status(400).json({ message: "Bad Request"});
+      return;
+    }
     
     const husbandry = await client.husbandryRecord.create({
       data: {

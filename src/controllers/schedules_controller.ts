@@ -28,6 +28,12 @@ const createSchedule = (client: PrismaClient): RequestHandler =>
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
+
+    if (!(type != "" && description != "" && typeof(monday) == "boolean" && typeof(tuesday) == "boolean" && typeof(wednesday) == "boolean" && typeof(thursday) == "boolean" && typeof(friday) == "boolean" && typeof(saturday) == "boolean" && typeof(sunday) == "boolean")) {
+      res.status(400).json({ message: "Bad Request"});
+      return;
+    }
+
     const schedule = await client.schedule.create({
       data: {
         reptile: {connect : { id: reptileId }},

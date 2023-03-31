@@ -35,6 +35,8 @@ export const Create = () => {
         .then((json) => {
             if (json.reptile) {
                 navigate("/dashboard", {replace: false});
+            } else if (json.message) {
+                alert(json.message);
             }
         });
 

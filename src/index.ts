@@ -21,7 +21,6 @@ app.set("views", path.join(__dirname, "/views"));
 
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 reptilesController(app, client);
 usersController(app, client);
