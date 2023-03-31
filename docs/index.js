@@ -39,12 +39,16 @@ app.use((0, cookie_parser_1.default)());
 // I should be able to navigate to the Login page
 // I should be able to navigate to the Signup page
 app.get("/", (req, res) => {
-    res.send(`
-    <h1>Reptile Manager</h1>
-    <p>Reptile Manager is a web application that allows users to track their reptiles and their care.</p>
-    <a href="/login">Login</a>
-    <a href="/signup">Signup</a>
-  `);
+    res.send(
+      <script src="../client/src/pages/Home.tsx"></script>
+  //     `
+  //   <h1>Reptile Manager</h1>
+  //   <p>Reptile Manager is a web application that allows users to track their reptiles and their care.</p>
+  //   <a href="/login">Login</a>
+  //   <a href="/signup">Signup</a>
+  // `
+  
+  );
 });
 //login page
 // I should be able to sign into a user account
