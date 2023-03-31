@@ -51,8 +51,13 @@ export const Login = () => {
 
     return (
         <div>
-            <input type="text" id="email" name="email" onChange={(event) => {setEmail(event.target.value)}} placeholder="Email" />
-            <input type="password" id="password" name="password" onChange={(event) => {setPassword(event.target.value)}} placeholder="Password" />
+            <div>
+                <div>
+                    <input type="text" id="email" name="email" onChange={(event) => {setEmail(event.target.value)}} placeholder="Email" />
+                </div>
+                <input type="password" id="password" name="password" onChange={(event) => {setPassword(event.target.value)}} placeholder="Password" />
+            </div>
+
             <button onClick={pullData}>Login</button>
             <button onClick={() => navigate("/signup", {replace: false})}>Signup</button>
         </div>
