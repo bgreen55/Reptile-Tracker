@@ -27,6 +27,7 @@ export const Husbandry = () => {
 
         var json = JSON.stringify(data);
     
+        let success = false;
         const response = await fetch("/husbandry/create", {
           method: "POST",
           headers: {
@@ -38,9 +39,15 @@ export const Husbandry = () => {
         .then((response) => response.json())
         .then((json) => {
             if (json.husbandry) {
-                navigate(`/reptile/${id}`, {replace: false});
-            } else if (json.message) {
+                success = true;
+            }
+            else if (json.message) {
+                success = false;
                 alert(json.message);
+            }
+        }).finally(() => {
+            if (success) {
+                navigate(`/reptile/${id}`, {replace: false});
             }
         });
 

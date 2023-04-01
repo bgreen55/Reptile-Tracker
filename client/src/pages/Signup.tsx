@@ -27,24 +27,30 @@ export const Signup = () => {
         var json = JSON.stringify(data);
     
         //send data to server
+        let success = false;
         const response = await fetch("/users/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: json,
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            //if login is successful, redirect to dashboard
+            if (json.token) {
+                success = true;
+                localStorage.setItem("token", json.token);
+                localStorage.setItem("userId", json.user.id);
+            } else if (json.message) {
+                success = false;
+                alert(json.message);
+            }
+        }).finally(() => {
+            if (success) {
+                navigate("/dashboard", {replace: false});
+            }
         });
-        const result = await response.json();
-
-        //if login is successful, redirect to dashboard
-        if (result.token) {
-            localStorage.setItem("token", result.token);
-            localStorage.setItem("userId", result.user.id);
-            navigate("/dashboard", {replace: false});
-        } else if (result.message) {
-            alert(result.message);
-        }
-            
       }
 
     return (

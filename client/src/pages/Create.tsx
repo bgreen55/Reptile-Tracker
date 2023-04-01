@@ -33,11 +33,11 @@ export const Create = () => {
         })
         .then((response) => response.json())
         .then((json) => {
-            if (json.reptile) {
-                navigate("/dashboard", {replace: false});
-            } else if (json.message) {
+            if (json.message) {
                 alert(json.message);
             }
+        }).finally(() => {
+            navigate("/dashboard", {replace: false});
         });
 
       }

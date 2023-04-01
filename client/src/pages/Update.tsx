@@ -25,6 +25,7 @@ export const Update = () => {
 
         var json = JSON.stringify(data);
     
+        let success = false;
         const response = await fetch("/reptiles/update", {
           method: "PUT",
           headers: {
@@ -36,9 +37,15 @@ export const Update = () => {
         .then((response) => response.json())
         .then((json) => {
             if (json.reptile) {
-                navigate(`/reptile/${id}`, {replace: false});
-            } else if (json.message) {
+                success = true;
+            }
+            else if (json.message) {
+                success = false;
                 alert(json.message);
+            }
+        }).finally(() => {
+            if (success) {
+                navigate(`/reptile/${id}`, {replace: false});
             }
         });
 

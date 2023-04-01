@@ -21,6 +21,7 @@ export const Feeding = () => {
 
         var json = JSON.stringify(data);
     
+        let success = false;
         const response = await fetch("/feedings/create", {
           method: "POST",
           headers: {
@@ -32,11 +33,20 @@ export const Feeding = () => {
         .then((response) => response.json())
         .then((json) => {
             if (json.feeding) {
-                navigate(`/reptile/${id}`, {replace: false});
-            } else if (json.message) {
+                success = true;
+            }
+            else if (json.message) {
+                success = false;
                 alert(json.message);
             }
+        }).finally(() => {
+            if (success) {
+                navigate(`/reptile/${id}`, {replace: false});
+            }
         });
+
+        console.log("ASD");
+        console.log(await response);
 
       }
 

@@ -27,24 +27,31 @@ export const Login = () => {
         var json = JSON.stringify(data);
 
         //send data to server
+        let success = false;
         const response = await fetch("/users/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: json,
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            if (json.token) {
+                success = true;
+                localStorage.setItem("token", json.token);
+                localStorage.setItem("userId", json.user.id);
+            } else {
+                //if login is unsuccessful, alert user
+                success = false;
+                alert("Invalid email or password");
+            }
+        })
+        .finally(() => {
+            if (success) {
+                navigate("/dashboard", {replace: false});
+            }
         });
-        const result = await response.json();
-
-        //if login is successful, redirect to dashboard
-        if (result.token) {
-            localStorage.setItem("token", result.token);
-            localStorage.setItem("userId", result.user.id);
-            navigate("/dashboard", {replace: false});
-        //if login is unsuccessful, alert user
-        } else {
-            alert("Invalid email or password");
-        }
     }
 
     return (

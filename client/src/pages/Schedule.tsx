@@ -38,6 +38,7 @@ export const Schedule = () => {
 
         var json = JSON.stringify(data);
     
+        let success = false;
         const response = await fetch("/schedules/create", {
           method: "POST",
           headers: {
@@ -49,9 +50,15 @@ export const Schedule = () => {
         .then((response) => response.json())
         .then((json) => {
             if (json.schedule) {
-                navigate(`/reptile/${id}`, {replace: false});
-            } else if (json.message) {
+                success = true;
+            }
+            else if (json.message) {
+                success = false;
                 alert(json.message);
+            }
+        }).finally(() => {
+            if (success) {
+                navigate(`/reptile/${id}`, {replace: false});
             }
         });
 
